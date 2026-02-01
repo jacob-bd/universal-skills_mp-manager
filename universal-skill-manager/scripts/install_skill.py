@@ -30,6 +30,8 @@ import hashlib
 from pathlib import Path
 from typing import Optional
 
+VERSION = "1.0.0"
+
 
 # =============================================================================
 # URL Parsing
@@ -503,11 +505,11 @@ Examples:
     )
     
     parser.add_argument(
-        '--url', required=True,
+        '--url', required=False,
         help='GitHub URL to skill folder (tree URL format)'
     )
     parser.add_argument(
-        '--dest', required=True,
+        '--dest', required=False,
         help='Local destination path for skill installation'
     )
     parser.add_argument(
@@ -530,8 +532,21 @@ Examples:
         '--max-depth', type=int, default=5,
         help='Maximum directory depth to recurse (default: 5)'
     )
+    parser.add_argument(
+        '--version', action='store_true',
+        help='Show version information and exit'
+    )
     
     args = parser.parse_args()
+
+    # Show version
+    if args.version:
+        print(f"Universal Skill Installer v{VERSION}")
+        sys.exit(0)
+    
+    # Validate required arguments
+    if not args.url or not args.dest:
+        parser.error("the following arguments are required: --url, --dest")
     
     # Expand ~ in destination path
     dest = Path(args.dest).expanduser().resolve()
