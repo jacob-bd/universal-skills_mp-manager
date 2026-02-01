@@ -236,11 +236,14 @@ curl -X GET "https://skillsmp.com/api/v1/skills/ai-search?q=help+me+debug+code" 
 ## Repository Structure
 
 ```
-skillsmp--skills-manager/
+skillsmp-universal-skills-manager/
 ├── README.md                        # This file
 ├── CLAUDE.md                        # Claude Code context file
+├── specs.md                         # Technical specification
 └── universal-skill-manager/         # The skill itself
-    └── SKILL.md                     # Skill definition and logic
+    ├── SKILL.md                     # Skill definition and logic
+    └── scripts/
+        └── install_skill.py         # Helper script for downloading skills
 ```
 
 ## Contributing

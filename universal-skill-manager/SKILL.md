@@ -51,9 +51,9 @@ This skill manages the following tools and scopes. Always verify these paths exi
     *   Common patterns: `skill/`, `skills/{name}/`, root level, or custom folder names
     *   Confirm the correct path before generating the download URL
 3.  **Download Using Helper Script:**
-    *   Use `install_skill.py` to download the skill:
+    *   Use `install_skill.py` (located in this skill's `scripts/` folder):
     ```bash
-    python3 scripts/install_skill.py \
+    python3 ~/.claude/skills/universal-skill-manager/scripts/install_skill.py \
       --url "https://github.com/{owner}/{repo}/tree/{branch}/{skill-folder}" \
       --dest "{target-path}" \
       --dry-run  # Preview first, then remove flag to install

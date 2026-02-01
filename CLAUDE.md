@@ -19,11 +19,14 @@ This is a **skill definition repository** containing the Universal Skill Manager
 ### Repository Structure
 
 ```
-skillsmp--skills-manager/
+skillsmp-universal-skills-manager/
 ├── README.md                       # Installation & usage documentation
 ├── CLAUDE.md                       # This file - technical context
+├── specs.md                        # Technical specification for install script
 └── universal-skill-manager/        # The skill folder
-    └── SKILL.md                    # Skill definition and logic
+    ├── SKILL.md                    # Skill definition and logic
+    └── scripts/
+        └── install_skill.py        # Python helper for downloading skills from GitHub
 ```
 
 ### Skill Structure
@@ -108,6 +111,7 @@ The skill maintains consistency by:
 ### File Locations
 
 - **Skill definition**: `universal-skill-manager/SKILL.md` - The main skill logic and instructions
+- **Install helper**: `universal-skill-manager/scripts/install_skill.py` - Python script for downloading skills from GitHub
 - **User documentation**: `README.md` - Installation, configuration, and usage guide
 - **Developer context**: `CLAUDE.md` - This file, technical architecture and guidelines
 
