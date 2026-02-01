@@ -44,21 +44,31 @@ This skill manages the following tools and scopes. Always verify these paths exi
     *   If from SkillsMP search result: Use the `githubUrl` from the API response
     *   If from skill name/ID: Search SkillsMP API first to find the skill
     *   If local: Identify the source path
-2.  **Fetch Skill Content:**
-    *   Convert GitHub tree URL to raw URL
-    *   Fetch SKILL.md content from GitHub
-    *   Validate the content has proper YAML frontmatter
-3.  **Determine Primary Target:**
+2.  **Verify Repository Structure (CRITICAL):**
+    *   Before downloading, browse the GitHub repo to confirm the skill folder location
+    *   Use GitHub API to list directory contents: `GET /repos/{owner}/{repo}/contents?ref={branch}`
+    *   Look for folders containing `SKILL.md` - this is the actual skill directory
+    *   Common patterns: `skill/`, `skills/{name}/`, root level, or custom folder names
+    *   Confirm the correct path before generating the download URL
+3.  **Download Using Helper Script:**
+    *   Use `install_skill.py` to download the skill:
+    ```bash
+    python3 scripts/install_skill.py \
+      --url "https://github.com/{owner}/{repo}/tree/{branch}/{skill-folder}" \
+      --dest "{target-path}" \
+      --dry-run  # Preview first, then remove flag to install
+    ```
+    *   The script handles: atomic install, validation, subdirectories, backups
+4.  **Determine Primary Target:**
     *   Ask: "Should this be installed Globally (User) or Locally (Project)?"
     *   Determine the primary tool (e.g., if user is in Claude Code, Claude is primary)
-4.  **The "Sync Check" (CRITICAL):**
+5.  **The "Sync Check" (CRITICAL):**
     *   **Scan:** Check if other supported tools are installed on the system (look for their config folders)
     *   **Propose:** "I see you also have OpenCode and Cursor installed. Do you want to sync this skill to them as well?"
-5.  **Execute:**
-    *   Create skill directory: `.../skills/{skill-name}/`
-    *   Write SKILL.md and any additional files to all selected target directories
+6.  **Execute:**
+    *   Run the install script for each target location
     *   Ensure the standard structure is maintained
-6.  **Report Success:**
+7.  **Report Success:**
     *   Show installed skill name, author, and location(s)
     *   Display GitHub URL and stars count for reference
 
