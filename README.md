@@ -1,15 +1,14 @@
 # Universal Skills(mp) Manager
 
 <p align="center">
-  <img src="assets/mascot.png" alt="Universal Skill Manager Mascot" width="300">
+  <img src="assets/mascot.png" alt="Universal Skills(mp) Manager" width="100%">
 </p>
 
 <p align="center">
-  <strong>Your AI skill orchestrator — Search, Install, Sync, Discover, Report</strong>
-</p>
-
-<p align="center">
-  <a href="https://skillsmp.com">Powered by SkillsMP.com</a>
+  <a href="https://skillsmp.com">Powered by SkillsMP.com</a> • 
+  <a href="#quick-start">Quick Start</a> • 
+  <a href="#features">Features</a> • 
+  <a href="#supported-tools">Supported Tools</a>
 </p>
 
 ---
