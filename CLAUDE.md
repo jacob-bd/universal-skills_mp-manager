@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This repository contains the **Universal Skill Manager** skill, which acts as a centralized package manager for AI capabilities across multiple AI coding tools (Gemini CLI, Google Anti-Gravity, OpenCode, Claude Code, Continue, Cursor, etc.).
+This repository contains the **Universal Skill Manager** skill, which acts as a centralized package manager for AI capabilities across multiple AI coding tools (Gemini CLI, Google Anti-Gravity, OpenCode, Claude Code, Cursor, etc.).
 
 The skill enables:
 - **Discovery**: Searching for skills from SkillsMP.com using keyword or AI semantic search
@@ -43,11 +43,11 @@ The skill manages skills across these AI tools and their respective paths:
 | Tool | User Scope (Global) | Project Scope (Local) |
 |------|---------------------|----------------------|
 | Gemini CLI | `~/.gemini/skills/` | `./.gemini/skills/` |
-| Google Anti-Gravity | `~/.antigravity/extensions/` | `./.antigravity/extensions/` |
-| OpenCode | `~/.opencode/extensions/` | `./.opencode/skills/` |
+| Google Anti-Gravity | `~/.gemini/antigravity/skills/` | `./.antigravity/extensions/` |
+| OpenCode | `~/.config/opencode/skills/` | `./.opencode/skills/` |
 | Claude Code | `~/.claude/skills/` | `./.claude/skills/` |
 | OpenAI Codex | `~/.codex/skills/` | `./.codex/skills/` |
-| Continue | `~/.continue/prompts/` | `./.continue/prompts/` |
+
 | block/goose | `~/.goose/agents/` | `./.goose/agents/` |
 | Roo Code | `~/.roo/skills/` | `./.roo/skills/` |
 | Cursor | `~/.cursor/extensions/` | `./.cursor/extensions/` |

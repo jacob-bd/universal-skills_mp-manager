@@ -6,7 +6,7 @@ description: The master coordinator for AI skills. Discovers skills from SkillsM
 
 # Universal Skill Manager
 
-This skill empowers the agent to act as a centralized package manager for AI capabilities. It discovers skills from the SkillsMP.com repository and unifies skill management across multiple AI tools (Claude Code, Gemini, Anti-Gravity, OpenCode, Continue, Cursor, etc.), ensuring consistency and synchronization.
+This skill empowers the agent to act as a centralized package manager for AI capabilities. It discovers skills from the SkillsMP.com repository and unifies skill management across multiple AI tools (Claude Code, Gemini, Anti-Gravity, OpenCode, Cursor, etc.), ensuring consistency and synchronization.
 
 ## When to Use This Skill
 
@@ -24,17 +24,15 @@ This skill manages the following tools and scopes. Always verify these paths exi
 | Tool | User Scope (Global) | Project Scope (Local) |
 | :--- | :--- | :--- |
 | **Gemini CLI** | `~/.gemini/skills/` | `./.gemini/skills/` |
-| **Google Anti-Gravity** | `~/.antigravity/extensions/` | `./.antigravity/extensions/` |
-| **OpenCode** | `~/.opencode/extensions/` | `./.opencode/skills/` |
+| **Google Anti-Gravity** | `~/.gemini/antigravity/skills/` | `./.antigravity/extensions/` |
+| **OpenCode** | `~/.config/opencode/skills/` | `./.opencode/skills/` |
 | **OpenClaw** | `~/.openclaw/workspace/skills/` | `./.openclaw/skills/` |
 | **Claude Code** | `~/.claude/skills/` | `./.claude/skills/` |
 | **OpenAI Codex** | `~/.codex/skills/` | `./.codex/skills/` |
-| **Continue** | `~/.continue/prompts/` | `./.continue/prompts/` |
-| **block/goose** | `~/.goose/agents/` | `./.goose/agents/` |
+| **block/goose** | `~/.config/goose/skills/` | `./.goose/agents/` |
 | **Roo Code** | `~/.roo/skills/` | `./.roo/skills/` |
 | **Cursor** | `~/.cursor/extensions/` | `./.cursor/extensions/` |
-| **OpenClaw** | `~/.openclaw/skills/` | `./.openclaw/skills/` |
-| **OpenClaw** | `~/.openclaw/workspace/skills/` | `./.openclaw/skills/` |
+
 
 *(Note: If a tool uses a different directory structure, ask the user to confirm the path, then remember it using `save_memory`.)*
 
@@ -149,16 +147,16 @@ This skill manages the following tools and scopes. Always verify these paths exi
     ls -d ~/.gemini/skills 2>/dev/null && echo "Gemini: ✓"
     ls -d ~/.gemini/antigravity/skills 2>/dev/null && echo "Antigravity: ✓"
     ls -d ~/.openclaw/workspace/skills 2>/dev/null && echo "OpenClaw: ✓"
-    ls -d ~/.continue/prompts 2>/dev/null && echo "Continue: ✓"
-    ls -d ~/.cursor/skills 2>/dev/null && echo "Cursor: ✓"
-    ls -d ~/.opencode/skills 2>/dev/null && echo "OpenCode: ✓"
+    ls -d ~/.cursor/extensions 2>/dev/null && echo "Cursor: ✓"
+    ls -d ~/.config/opencode/skills 2>/dev/null && echo "OpenCode: ✓"
     ls -d ~/.roo/skills 2>/dev/null && echo "Roo: ✓"
+    ls -d ~/.config/goose/skills 2>/dev/null && echo "Goose: ✓"
     ```
 
 2.  **Collect All Skills:**
     For each detected tool, list skill folders:
     ```bash
-    find ~/.{claude,codex,gemini,gemini/antigravity,openclaw/workspace}/skills -maxdepth 1 -type d 2>/dev/null | \
+    find ~/.{claude,codex,gemini,gemini/antigravity,openclaw/workspace,config/opencode,config/goose,roo}/skills -maxdepth 1 -type d 2>/dev/null | \
       xargs -I{} basename {} | sort -u
     ```
 

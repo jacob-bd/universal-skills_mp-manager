@@ -43,12 +43,11 @@ Copy the `universal-skill-manager` folder to your tool's skills directory:
 | **Claude Code** | `~/.claude/skills/` |
 | **Gemini CLI** | `~/.gemini/skills/` |
 | **Google Antigravity** | `~/.gemini/antigravity/skills/` |
-| **Cursor** | `~/.cursor/skills/` |
-| **Continue** | `~/.continue/prompts/` |
+| **Cursor** | `~/.cursor/extensions/` |
 | **Roo Code** | `~/.roo/skills/` |
-| **Roo Code** | `~/.roo/skills/` |
-| **OpenCode** | `~/.opencode/skills/` |
+| **OpenCode** | `~/.config/opencode/skills/` |
 | **OpenClaw** | `~/.openclaw/workspace/skills/` |
+| **block/goose** | `~/.config/goose/skills/` |
 
 ```bash
 # Example: Install to OpenAI Codex
@@ -159,6 +158,19 @@ export SKILLSMP_API_KEY="your_api_key_here"
 
 **Note**: This only persists for the current terminal session.
 
+#### Windows Users
+
+For Windows (PowerShell):
+```powershell
+[System.Environment]::SetEnvironmentVariable('SKILLSMP_API_KEY', 'your_api_key_here', 'User')
+```
+*Restart your terminal for changes to take effect.*
+
+For Windows (Command Prompt):
+```cmd
+setx SKILLSMP_API_KEY "your_api_key_here"
+```
+
 #### Getting Your API Key
 
 1. Visit [SkillsMP.com](https://skillsmp.com)
@@ -244,13 +256,12 @@ The AI will:
 |---------|-------------|------------|
 | **Claude Code** | `~/.claude/skills/` | `./.claude/skills/` |
 | **Cursor** | `~/.cursor/extensions/` | `./.cursor/extensions/` |
-| **Continue** | `~/.continue/prompts/` | `./.continue/prompts/` |
 | **Gemini CLI** | `~/.gemini/skills/` | `./.gemini/skills/` |
-| **Google Anti-Gravity** | `~/.antigravity/extensions/` | `./.antigravity/extensions/` |
-| **OpenCode** | `~/.opencode/extensions/` | `./.opencode/skills/` |
+| **Google Anti-Gravity** | `~/.gemini/antigravity/skills/` | `./.antigravity/extensions/` |
+| **OpenCode** | `~/.config/opencode/skills/` | `./.opencode/skills/` |
 | **OpenClaw** | `~/.openclaw/workspace/skills/` | `./.openclaw/skills/` |
 | **OpenAI Codex** | `~/.codex/skills/` | `./.codex/skills/` |
-| **block/goose** | `~/.goose/agents/` | `./.goose/agents/` |
+| **block/goose** | `~/.config/goose/skills/` | `./.goose/agents/` |
 | **Roo Code** | `~/.roo/skills/` | `./.roo/skills/` |
 
 ## API Reference
