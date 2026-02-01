@@ -26,7 +26,16 @@ A centralized skill manager for AI coding assistants. Discovers, installs, and s
 
 ## Installation
 
-Copy the `universal-skill-manager` folder to your AI tool's skills directory:
+### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/jacob-bd/universal-skills_mp-manager.git
+cd universal-skills_mp-manager
+```
+
+### Step 2: Copy to Your AI Tool
+
+Copy the `universal-skill-manager` folder to your tool's skills directory:
 
 | Tool | Global Path |
 |------|-------------|
@@ -38,20 +47,20 @@ Copy the `universal-skill-manager` folder to your AI tool's skills directory:
 | **Roo Code** | `~/.roo/skills/` |
 | **OpenCode** | `~/.opencode/skills/` |
 
-### Example
-
 ```bash
-# For OpenAI Codex
+# Example: Install to OpenAI Codex
 cp -r universal-skill-manager ~/.codex/skills/
 
-# For Claude Code
+# Example: Install to Claude Code
 cp -r universal-skill-manager ~/.claude/skills/
 
-# For Gemini CLI
+# Example: Install to Gemini CLI
 cp -r universal-skill-manager ~/.gemini/skills/
 ```
 
-Restart your AI assistant after installation.
+### Step 3: Restart Your AI Assistant
+
+Restart or reload your AI tool to pick up the new skill.
 
 ## Quick Start
 
