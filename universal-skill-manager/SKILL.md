@@ -25,12 +25,15 @@ This skill manages the following tools and scopes. Always verify these paths exi
 | **Gemini CLI** | `~/.gemini/skills/` | `./.gemini/skills/` |
 | **Google Anti-Gravity** | `~/.antigravity/extensions/` | `./.antigravity/extensions/` |
 | **OpenCode** | `~/.opencode/extensions/` | `./.opencode/skills/` |
+| **OpenClaw** | `~/.openclaw/workspace/skills/` | `./.openclaw/skills/` |
 | **Claude Code** | `~/.claude/skills/` | `./.claude/skills/` |
 | **OpenAI Codex** | `~/.codex/skills/` | `./.codex/skills/` |
 | **Continue** | `~/.continue/prompts/` | `./.continue/prompts/` |
 | **block/goose** | `~/.goose/agents/` | `./.goose/agents/` |
 | **Roo Code** | `~/.roo/skills/` | `./.roo/skills/` |
 | **Cursor** | `~/.cursor/extensions/` | `./.cursor/extensions/` |
+| **OpenClaw** | `~/.openclaw/skills/` | `./.openclaw/skills/` |
+| **OpenClaw** | `~/.openclaw/workspace/skills/` | `./.openclaw/skills/` |
 
 *(Note: If a tool uses a different directory structure, ask the user to confirm the path, then remember it using `save_memory`.)*
 
@@ -142,6 +145,7 @@ This skill manages the following tools and scopes. Always verify these paths exi
     ls -d ~/.codex/skills 2>/dev/null && echo "Codex: ✓"
     ls -d ~/.gemini/skills 2>/dev/null && echo "Gemini: ✓"
     ls -d ~/.gemini/antigravity/skills 2>/dev/null && echo "Antigravity: ✓"
+    ls -d ~/.openclaw/workspace/skills 2>/dev/null && echo "OpenClaw: ✓"
     ls -d ~/.continue/prompts 2>/dev/null && echo "Continue: ✓"
     ls -d ~/.cursor/skills 2>/dev/null && echo "Cursor: ✓"
     ls -d ~/.opencode/skills 2>/dev/null && echo "OpenCode: ✓"
@@ -151,7 +155,7 @@ This skill manages the following tools and scopes. Always verify these paths exi
 2.  **Collect All Skills:**
     For each detected tool, list skill folders:
     ```bash
-    find ~/.{claude,codex,gemini,gemini/antigravity}/skills -maxdepth 1 -type d 2>/dev/null | \
+    find ~/.{claude,codex,gemini,gemini/antigravity,openclaw/workspace}/skills -maxdepth 1 -type d 2>/dev/null | \
       xargs -I{} basename {} | sort -u
     ```
 
@@ -179,7 +183,8 @@ This skill manages the following tools and scopes. Always verify these paths exi
 
 1.  **Structure Integrity:** When installing, always ensure the skill has its own folder (e.g., `.../skills/my-skill/`). Do not dump loose files into the root skills directory.
 2.  **Conflict Safety:** If a skill already exists at a target location, **always** ask before overwriting, unless the user explicitly requested a "Force Sync."
-3.  **Cross-Platform Adaptation:**
+3.  **OpenClaw Note:** OpenClaw may require a restart to pick up new skills if `skills.load.watch` is not enabled in `openclaw.json`. Warn the user of this after installation.
+4.  **Cross-Platform Adaptation:**
     *   Gemini uses `SKILL.md`.
     *   If OpenCode or Anti-Gravity require a specific manifest (e.g., `manifest.json`), generate a basic one based on the `SKILL.md` frontmatter during installation.
 

@@ -46,7 +46,9 @@ Copy the `universal-skill-manager` folder to your tool's skills directory:
 | **Cursor** | `~/.cursor/skills/` |
 | **Continue** | `~/.continue/prompts/` |
 | **Roo Code** | `~/.roo/skills/` |
+| **Roo Code** | `~/.roo/skills/` |
 | **OpenCode** | `~/.opencode/skills/` |
+| **OpenClaw** | `~/.openclaw/workspace/skills/` |
 
 ```bash
 # Example: Install to OpenAI Codex
@@ -57,6 +59,9 @@ cp -r universal-skill-manager ~/.claude/skills/
 
 # Example: Install to Gemini CLI
 cp -r universal-skill-manager ~/.gemini/skills/
+
+# Example: Install to OpenClaw
+cp -r universal-skill-manager ~/.openclaw/workspace/skills/
 ```
 
 ### Step 3: Restart Your AI Assistant
@@ -242,6 +247,7 @@ The AI will:
 | **Gemini CLI** | `~/.gemini/skills/` | `./.gemini/skills/` |
 | **Google Anti-Gravity** | `~/.antigravity/extensions/` | `./.antigravity/extensions/` |
 | **OpenCode** | `~/.opencode/extensions/` | `./.opencode/skills/` |
+| **OpenClaw** | `~/.openclaw/workspace/skills/` | `./.openclaw/skills/` |
 | **OpenAI Codex** | `~/.codex/skills/` | `./.codex/skills/` |
 | **block/goose** | `~/.goose/agents/` | `./.goose/agents/` |
 | **Roo Code** | `~/.roo/skills/` | `./.roo/skills/` |
