@@ -84,7 +84,18 @@ This skill manages the following tools and scopes. Always verify these paths exi
 **Trigger:** User searches for skills (e.g., "Find a debugging skill" or "Search for React skills").
 
 **Procedure:**
-1.  **Choose Search Method:**
+1.  **Check API Key (FIRST):**
+    *   Verify `SKILLSMP_API_KEY` is set: `echo $SKILLSMP_API_KEY`
+    *   If not set, guide the user:
+        1. Visit [SkillsMP.com](https://skillsmp.com) and navigate to API section
+        2. Generate or copy API key
+        3. Set it permanently:
+           ```bash
+           echo 'export SKILLSMP_API_KEY="your_key_here"' >> ~/.zshrc
+           source ~/.zshrc
+           ```
+    *   Do NOT proceed with search until key is configured
+2.  **Choose Search Method:**
     -   **Keyword Search** (`/api/v1/skills/search`): For specific terms, exact matches
     -   **AI Semantic Search** (`/api/v1/skills/ai-search`): For natural language queries (e.g., "help me debug code")
 
