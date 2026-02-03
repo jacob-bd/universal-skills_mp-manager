@@ -88,22 +88,33 @@ This skill manages the following tools and scopes. Always verify these paths exi
 **Trigger:** User searches for skills (e.g., "Find a debugging skill" or "Search for React skills").
 
 **Procedure:**
-1.  **Check API Key (FIRST):**
-    *   Verify `SKILLSMP_API_KEY` is set: `echo $SKILLSMP_API_KEY`
-    *   If not set, guide the user:
-        1. Visit [SkillsMP.com](https://skillsmp.com) and navigate to API section
-        2. Generate or copy API key
-        3. Set it permanently:
-           ```bash
-           echo 'export SKILLSMP_API_KEY="your_key_here"' >> ~/.zshrc
-           source ~/.zshrc
-           ```
-    *   Do NOT proceed with search until key is configured
+1.  **Discover API Key (Priority Order):**
+    *   **Step 1 - Environment Variable:** Check `$SKILLSMP_API_KEY`
+        ```bash
+        echo $SKILLSMP_API_KEY
+        ```
+        If set and non-empty, use it.
+    
+    *   **Step 2 - Config File:** Check for `config.json` in this skill's directory
+        ```bash
+        # Look for config.json in skill directory (path varies by tool)
+        cat ~/.claude/skills/universal-skill-manager/config.json 2>/dev/null
+        ```
+        If `skillsmp_api_key` field has a non-empty value, use it.
+    
+    *   **Step 3 - User Prompt:** If neither found, prompt the user:
+        "To search SkillsMP.com, I need your API key. Please provide it now, or get one at https://skillsmp.com"
+        Store the provided key in memory for this conversation session.
+    
+    *   **Security:** Never log, display, or echo the full API key value.
+
+    **Note for claude.ai/Desktop users:** Environment variables are not available in the cloud sandbox. Use the "Package for Cloud Upload" capability (Section 5) to create a ZIP with your API key embedded, or provide your key when prompted.
+
 2.  **Choose Search Method:**
     -   **Keyword Search** (`/api/v1/skills/search`): For specific terms, exact matches
     -   **AI Semantic Search** (`/api/v1/skills/ai-search`): For natural language queries (e.g., "help me debug code")
 
-2.  **Execute API Call:**
+3.  **Execute API Call:**
     ```bash
     # Keyword Search
     curl -X GET "https://skillsmp.com/api/v1/skills/search?q={query}&limit=20&sortBy=recent" \
@@ -114,12 +125,7 @@ This skill manages the following tools and scopes. Always verify these paths exi
       -H "Authorization: Bearer $SKILLSMP_API_KEY"
     ```
 
-    **Note:** The `SKILLSMP_API_KEY` environment variable must be set. Users can set it via:
-    - Session: `export SKILLSMP_API_KEY="your_api_key"`
-    - Shell profile: Add to `~/.bashrc` or `~/.zshrc`
-    - .env file: Create `.env` with `SKILLSMP_API_KEY=your_api_key`
-
-3.  **Parse Response:**
+4.  **Parse Response:**
     -   **Keyword Search Response:** Extract from `data.skills[]` array
     -   **AI Search Response:** Extract from `data.data[]` array, check for `skill` object
     -   Available fields: `id`, `name`, `author`, `description`, `githubUrl`, `skillUrl`, `stars`, `updatedAt`
