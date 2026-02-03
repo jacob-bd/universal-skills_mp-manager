@@ -64,6 +64,7 @@ Copy the `universal-skill-manager` folder to your tool's skills directory:
 | **OpenCode** | `~/.config/opencode/skills/` |
 | **OpenClaw** | `~/.openclaw/workspace/skills/` |
 | **block/goose** | `~/.config/goose/skills/` |
+| **claude.ai / Claude Desktop** | `[ZIP upload]` See [Cloud Platform Support](#cloud-platform-support) |
 
 ```bash
 # Example: Install to OpenAI Codex
