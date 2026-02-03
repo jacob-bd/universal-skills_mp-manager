@@ -16,6 +16,7 @@ Activate this skill when the user:
 - Wants to **sync** skills between different AI tools (e.g., "Copy this Gemini skill to OpenCode").
 - Asks to **move or copy** skills between scopes (User vs. Project).
 - Mentions "Google Anti-Gravity", "OpenCode", or "Gemini" in the context of skills/extensions.
+- Wants to **package this skill for cloud upload** (claude.ai, Claude Desktop).
 
 ## Supported Ecosystem
 
@@ -33,6 +34,14 @@ This skill manages the following tools and scopes. Always verify these paths exi
 | **Roo Code** | `~/.roo/skills/` | `./.roo/skills/` |
 | **Cursor** | `~/.cursor/extensions/` | `./.cursor/extensions/` |
 
+**Cloud Platforms (ZIP Upload Required):**
+
+| Platform | Installation Method |
+| :--- | :--- |
+| **claude.ai** | Upload ZIP via Settings → Capabilities → Upload Skill |
+| **Claude Desktop** | Upload ZIP via Settings → Capabilities → Upload Skill |
+
+*Note: Cloud platforms don't have access to local environment variables. Use the "Package for Cloud Upload" capability (Section 5) to embed your API key in the ZIP.*
 
 *(Note: If a tool uses a different directory structure, ask the user to confirm the path, then remember it using `save_memory`.)*
 
