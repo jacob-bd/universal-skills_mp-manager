@@ -53,7 +53,7 @@ The skill manages skills across these AI tools and their respective paths:
 | Roo Code | `~/.roo/skills/` | `./.roo/skills/` |
 | Cursor | `~/.cursor/extensions/` | `./.cursor/extensions/` |
 
-### Cloud Platform Support
+### claude.ai and Claude Desktop Support
 
 For claude.ai and Claude Desktop, skills must be uploaded as ZIP files through the web UI. The skill includes a "Package for Cloud Upload" capability that:
 1. Prompts user for their SkillsMP API key

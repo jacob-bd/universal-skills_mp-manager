@@ -16,7 +16,7 @@ Activate this skill when the user:
 - Wants to **sync** skills between different AI tools (e.g., "Copy this Gemini skill to OpenCode").
 - Asks to **move or copy** skills between scopes (User vs. Project).
 - Mentions "Google Anti-Gravity", "OpenCode", or "Gemini" in the context of skills/extensions.
-- Wants to **package this skill for cloud upload** (claude.ai, Claude Desktop).
+- Wants to **package this skill for claude.ai or Claude Desktop** (ZIP upload).
 
 ## Supported Ecosystem
 
@@ -34,14 +34,14 @@ This skill manages the following tools and scopes. Always verify these paths exi
 | **Roo Code** | `~/.roo/skills/` | `./.roo/skills/` |
 | **Cursor** | `~/.cursor/extensions/` | `./.cursor/extensions/` |
 
-**Cloud Platforms (ZIP Upload Required):**
+**claude.ai / Claude Desktop (ZIP Upload Required):**
 
 | Platform | Installation Method |
 | :--- | :--- |
 | **claude.ai** | Upload ZIP via Settings → Capabilities → Upload Skill |
 | **Claude Desktop** | Upload ZIP via Settings → Capabilities → Upload Skill |
 
-*Note: Cloud platforms don't have access to local environment variables. Use the "Package for Cloud Upload" capability (Section 5) to embed your API key in the ZIP.*
+*Note: claude.ai and Claude Desktop don't have access to local environment variables. Use the "Package for claude.ai/Desktop" capability (Section 5) to embed your API key in the ZIP.*
 
 *(Note: If a tool uses a different directory structure, ask the user to confirm the path, then remember it using `save_memory`.)*
 
@@ -117,7 +117,7 @@ This skill manages the following tools and scopes. Always verify these paths exi
     
     *   **Security:** Never log, display, or echo the full API key value.
 
-    **Note for claude.ai/Desktop users:** Environment variables are not available in the cloud sandbox. Use the "Package for Cloud Upload" capability (Section 5) to create a ZIP with your API key embedded, or provide your key when prompted.
+    **Note for claude.ai/Desktop users:** Environment variables are not available. Use the "Package for claude.ai/Desktop" capability (Section 5) to create a ZIP with your API key embedded, or provide your key when prompted.
 
 2.  **Choose Search Method:**
     -   **Keyword Search** (`/api/v1/skills/search`): For specific terms, exact matches
@@ -195,7 +195,7 @@ This skill manages the following tools and scopes. Always verify these paths exi
     - Skills unique to one tool
     - Skills installed everywhere
 
-### 5. Package for Cloud Upload
+### 5. Package for claude.ai / Claude Desktop
 
 **Trigger:** User wants to use this skill in claude.ai or Claude Desktop (e.g., "Package this for claude.ai", "Create a ZIP for Claude Desktop", "I want to upload this skill to claude.ai", "Prepare skill for web upload").
 

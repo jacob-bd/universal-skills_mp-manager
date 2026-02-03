@@ -64,7 +64,7 @@ Copy the `universal-skill-manager` folder to your tool's skills directory:
 | **OpenCode** | `~/.config/opencode/skills/` |
 | **OpenClaw** | `~/.openclaw/workspace/skills/` |
 | **block/goose** | `~/.config/goose/skills/` |
-| **claude.ai / Claude Desktop** | `[ZIP upload]` See [Cloud Platform Support](#cloud-platform-support) |
+| **claude.ai / Claude Desktop** | `[ZIP upload]` See [instructions below](#claudeai-and-claude-desktop) |
 
 ```bash
 # Example: Install to OpenAI Codex
@@ -281,9 +281,7 @@ The AI will:
 | **block/goose** | `~/.config/goose/skills/` | `./.goose/agents/` |
 | **Roo Code** | `~/.roo/skills/` | `./.roo/skills/` |
 
-## Cloud Platform Support
-
-### claude.ai and Claude Desktop
+## claude.ai and Claude Desktop
 
 For use in claude.ai or Claude Desktop (web-based environments), the skill requires special packaging since environment variables are not available.
 
