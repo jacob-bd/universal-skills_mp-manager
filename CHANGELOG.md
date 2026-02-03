@@ -8,10 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2026-02-03
 
 ### Added
-- Cloud upload packaging capability for claude.ai and Claude Desktop
+- ZIP packaging capability for claude.ai and Claude Desktop
 - Hybrid API key discovery (environment variable → config file → runtime prompt)
 - `config.json` template for embedded API key storage
-- Documentation for cloud platform installation
+- Documentation for claude.ai and Claude Desktop installation
 
 ### Changed
 - Updated API key discovery logic to support multiple sources
