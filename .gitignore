@@ -24,3 +24,6 @@ venv/
 # Test artifacts
 /tmp/
 *.bak
+
+# Worktrees
+.worktrees/
