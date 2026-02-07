@@ -39,6 +39,18 @@ This video covers:
 - ✅ **Multi-File Validation**: Validates `.py`, `.sh`, `.json`, `.yaml` files during install
 - 🌍 **Global Installation**: User-level skills available across all projects
 
+## Security Scanning
+
+Skills are automatically scanned for security threats at install time. The scanner checks for:
+
+- **Invisible Unicode** -- hidden characters that encode instructions invisible to humans
+- **Data exfiltration** -- markdown images or URLs designed to steal data
+- **Shell injection** -- remote downloads piped into shell interpreters
+- **Credential theft** -- references to SSH keys, API tokens, and secret files
+- **Prompt injection** -- instruction overrides, role hijacking, and safety bypasses
+
+Findings are displayed with severity levels (Critical/Warning/Info) and you choose whether to proceed. See [Security Scanning Reference](docs/SECURITY_SCANNING.md) for full details.
+
 ## Installation
 
 ### Step 1: Clone the Repository
@@ -119,6 +131,7 @@ python3 path/to/install_skill.py \
 - Compares new vs existing skills before update (shows diff)
 - Validates `.py`, `.sh`, `.json`, `.yaml` files
 - Supports subdirectories and nested files
+- Skip security scan with `--skip-scan` (not recommended)
 
 ## Configuration
 
