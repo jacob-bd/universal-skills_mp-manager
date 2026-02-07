@@ -490,6 +490,104 @@ def install_skill(temp_dir: Path, dest: Path) -> None:
 
 
 # =============================================================================
+# Security Scanning
+# =============================================================================
+
+def find_scanner_script() -> Optional[Path]:
+    """Find scan_skill.py in the same directory as this script."""
+    script_dir = Path(__file__).parent
+    scanner = script_dir / "scan_skill.py"
+    if scanner.exists():
+        return scanner
+    return None
+
+
+def run_security_scan(skill_dir: Path, force: bool = False) -> bool:
+    """
+    Run security scan on a skill directory before installation.
+
+    Returns True if installation should proceed, False to abort.
+    """
+    scanner = find_scanner_script()
+    if scanner is None:
+        print("  Warning: Security scanner (scan_skill.py) not found, skipping scan")
+        return True
+
+    print("\nRunning security scan...")
+
+    try:
+        result = subprocess.run(
+            [sys.executable, str(scanner), str(skill_dir)],
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+    except subprocess.TimeoutExpired:
+        print("  Warning: Security scan timed out, skipping")
+        return True
+    except Exception as e:
+        print(f"  Warning: Security scan failed to run: {e}")
+        return True
+
+    # Parse JSON output from scanner
+    try:
+        report = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        print("  Warning: Could not parse security scan results, skipping")
+        return True
+
+    # Extract summary and findings
+    summary = report.get("summary", {})
+    findings = report.get("findings", [])
+    total = summary.get("total", 0)
+
+    if total == 0:
+        print("  No security threats detected")
+        return True
+
+    # Display findings grouped by severity
+    severity_order = ["CRITICAL", "WARNING", "INFO"]
+    severity_labels = {
+        "CRITICAL": "CRITICAL",
+        "WARNING": "WARNING",
+        "INFO": "INFO",
+    }
+
+    print(f"\n  Security scan found {total} issue(s):")
+    print("  " + "-" * 48)
+
+    for severity in severity_order:
+        severity_findings = [f for f in findings if f.get("severity") == severity]
+        if not severity_findings:
+            continue
+
+        print(f"\n  [{severity_labels[severity]}]")
+        for finding in severity_findings:
+            file_name = finding.get("file", "unknown")
+            line = finding.get("line")
+            message = finding.get("message", "No description")
+            location = f"{file_name}:{line}" if line else file_name
+            print(f"    - {location}: {message}")
+
+    print("  " + "-" * 48)
+
+    # Summary line with counts
+    parts = []
+    for severity in severity_order:
+        count = summary.get(severity.lower(), summary.get(severity, 0))
+        if count > 0:
+            parts.append(f"{count} {severity.lower()}")
+    print(f"  Summary: {', '.join(parts)}")
+
+    if force:
+        print("\n  Note: --force specified, proceeding despite security findings")
+        return True
+
+    response = input("\nProceed with installation? [y/N]: ")
+    return response.lower() == 'y'
+
+
+# =============================================================================
 # Main
 # =============================================================================
 
@@ -531,6 +629,10 @@ Examples:
     parser.add_argument(
         '--max-depth', type=int, default=5,
         help='Maximum directory depth to recurse (default: 5)'
+    )
+    parser.add_argument(
+        '--skip-scan', action='store_true',
+        help='Skip security scan (not recommended)'
     )
     parser.add_argument(
         '--version', action='store_true',
@@ -618,7 +720,16 @@ Examples:
             sys.exit(2)
         
         print("  ✓ All files valid")
-        
+
+        # Step 2.5: Security scan
+        if not args.skip_scan:
+            should_proceed = run_security_scan(temp_path, args.force)
+            if not should_proceed:
+                print("Installation aborted by user after security scan.")
+                sys.exit(0)
+        else:
+            print("\n  (Security scan skipped via --skip-scan)")
+
         # Step 3: Compare if destination already exists
         if dest.exists():
             diff = compare_skill_directories(temp_path, dest)
