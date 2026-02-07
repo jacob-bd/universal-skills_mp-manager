@@ -244,31 +244,271 @@ class SkillScanner:
 
     def _check_credential_references(self, lines, file):
         """Check for references to credentials, tokens, or API keys."""
-        pass
+        path_patterns = [
+            r'~/\.ssh/',
+            r'~/\.aws/',
+            r'~/\.gnupg/',
+            r'~/\.env\b',
+            r'\.credentials',
+            r'id_rsa',
+            r'id_ed25519',
+            r'id_ecdsa',
+            r'\.pem\b',
+            r'\.key\b',
+            r'/etc/passwd',
+            r'/etc/shadow',
+        ]
+        env_patterns = [
+            r'\$\{?GITHUB_TOKEN\}?',
+            r'\$\{?OPENAI_API_KEY\}?',
+            r'\$\{?ANTHROPIC_API_KEY\}?',
+            r'\$\{?AWS_SECRET_ACCESS_KEY\}?',
+            r'\$\{?AWS_ACCESS_KEY_ID\}?',
+            r'\$\{?DATABASE_URL\}?',
+            r'\$\{?DB_PASSWORD\}?',
+            r'\$\{?SECRET_KEY\}?',
+            r'\$\{?PRIVATE_KEY\}?',
+            r'\$\{?API_SECRET\}?',
+            r'\$\{?GOOGLE_API_KEY\}?',
+            r'\$\{?STRIPE_SECRET\}?',
+        ]
+
+        compiled_path = [re.compile(p, re.IGNORECASE) for p in path_patterns]
+        compiled_env = [re.compile(p, re.IGNORECASE) for p in env_patterns]
+
+        for line_num, line in enumerate(lines, start=1):
+            for regex in compiled_path:
+                if regex.search(line):
+                    self._add_finding(
+                        severity="warning",
+                        category="credential_reference",
+                        file=file,
+                        line=line_num,
+                        description="Reference to credential or sensitive file path detected",
+                        matched_text=line.strip()[:100],
+                        recommendation="Avoid referencing credential files directly. Use environment variables or secure vaults instead.",
+                    )
+                    break
+            else:
+                for regex in compiled_env:
+                    if regex.search(line):
+                        self._add_finding(
+                            severity="warning",
+                            category="credential_reference",
+                            file=file,
+                            line=line_num,
+                            description="Reference to sensitive environment variable or API key detected",
+                            matched_text=line.strip()[:100],
+                            recommendation="Avoid hardcoding or directly referencing sensitive environment variables in skill files.",
+                        )
+                        break
 
     def _check_external_url_references(self, lines, file):
         """Check for external URL references that may fetch untrusted content."""
-        pass
+        patterns = [
+            r'\bcurl\s+.*https?://',
+            r'\bwget\s+.*https?://',
+            r'\bfetch\s*\(\s*["\']https?://',
+            r'\brequests?\.(get|post|put|delete)\s*\(',
+            r'\bhttp\.(get|post|put|delete)\s*\(',
+            r'\burllib\.request',
+        ]
+
+        compiled = [re.compile(p, re.IGNORECASE) for p in patterns]
+
+        for line_num, line in enumerate(lines, start=1):
+            for regex in compiled:
+                if regex.search(line):
+                    self._add_finding(
+                        severity="warning",
+                        category="external_url",
+                        file=file,
+                        line=line_num,
+                        description="External URL reference detected — may fetch untrusted content",
+                        matched_text=line.strip()[:100],
+                        recommendation="Verify the URL points to a trusted source. Avoid fetching arbitrary remote content in skill files.",
+                    )
+                    break
 
     def _check_command_execution(self, lines, file):
         """Check for dangerous command execution patterns."""
-        pass
+        patterns = [
+            r'\beval\s*\(',
+            r'\bexec\s*\(',
+            r'\bos\.system\s*\(',
+            r'\bsubprocess\.(run|call|Popen|check_output)\s*\(',
+            r'\bsh\s+-c\s+',
+            r'\bbash\s+-c\s+',
+            r'\bRuntime\.exec\s*\(',
+            r'\bos\.popen\s*\(',
+            r'\bcommands\.getoutput\s*\(',
+        ]
+
+        compiled = [re.compile(p, re.IGNORECASE) for p in patterns]
+
+        for line_num, line in enumerate(lines, start=1):
+            for regex in compiled:
+                if regex.search(line):
+                    self._add_finding(
+                        severity="warning",
+                        category="command_execution",
+                        file=file,
+                        line=line_num,
+                        description="Dangerous command execution pattern detected",
+                        matched_text=line.strip()[:100],
+                        recommendation="Avoid using dynamic command execution. Use safer alternatives or validate all inputs.",
+                    )
+                    break
 
     def _check_instruction_override(self, lines, file):
         """Check for attempts to override system instructions."""
-        pass
+        patterns = [
+            r'ignore\s+(all\s+)?previous\s+instructions?',
+            r'disregard\s+(all\s+)?(previous\s+|prior\s+)?instructions?',
+            r'disregard\s+(all\s+)?(previous\s+|prior\s+)?directives?',
+            r'forget\s+(all\s+)?(previous\s+|everything\s+)',
+            r'new\s+instructions?\s+(follow|are|:)',
+            r'override\s+(all\s+)?previous\s+instructions?',
+            r'cancel\s+(all\s+)?prior\s+instructions?',
+            r'your\s+(new|updated)\s+instructions?\s+(are|:)',
+            r'do\s+not\s+follow\s+(your\s+)?(original|previous)',
+        ]
+
+        compiled = [re.compile(p, re.IGNORECASE) for p in patterns]
+
+        for line_num, line in enumerate(lines, start=1):
+            for regex in compiled:
+                if regex.search(line):
+                    self._add_finding(
+                        severity="warning",
+                        category="instruction_override",
+                        file=file,
+                        line=line_num,
+                        description="Potential instruction override attempt detected",
+                        matched_text=line.strip()[:100],
+                        recommendation="Skill files should not attempt to override or cancel prior instructions. This is a prompt injection indicator.",
+                    )
+                    break
 
     def _check_role_hijacking(self, lines, file):
         """Check for role/persona hijacking attempts."""
-        pass
+        patterns = [
+            r'you\s+are\s+now\s+(?!going|ready|able)',
+            r'act\s+as\s+(if\s+)?(you\s+are|an?\s+)',
+            r'pretend\s+(to\s+be|you\s+are)',
+            r'assume\s+the\s+role\s+of',
+            r'enter\s+developer\s+mode',
+            r'\bDAN\s+mode\b',
+            r'unrestricted\s+mode',
+            r'you\s+have\s+no\s+restrictions',
+            r'enable\s+jailbreak',
+            r'you\s+are\s+no\s+longer\s+bound',
+        ]
+
+        compiled = [re.compile(p, re.IGNORECASE) for p in patterns]
+
+        for line_num, line in enumerate(lines, start=1):
+            for regex in compiled:
+                if regex.search(line):
+                    self._add_finding(
+                        severity="warning",
+                        category="role_hijacking",
+                        file=file,
+                        line=line_num,
+                        description="Potential role/persona hijacking attempt detected",
+                        matched_text=line.strip()[:100],
+                        recommendation="Skill files should not attempt to change the AI's role or persona. This is a prompt injection indicator.",
+                    )
+                    break
 
     def _check_safety_bypass(self, lines, file):
         """Check for attempts to bypass safety measures."""
-        pass
+        patterns = [
+            r'bypass\s+(safety|security|filter|restriction)',
+            r'disable\s+(content\s+)?filter',
+            r'remove\s+(all\s+)?restrictions?',
+            r'ignore\s+safety\s+protocols?',
+            r'without\s+(any\s+)?restrictions?',
+            r'system\s+override',
+            r'no\s+ethical\s+guidelines',
+            r'disregard\s+(any\s+)?filters?',
+            r'turn\s+off\s+(safety|content\s+filter)',
+        ]
+
+        compiled = [re.compile(p, re.IGNORECASE) for p in patterns]
+
+        for line_num, line in enumerate(lines, start=1):
+            for regex in compiled:
+                if regex.search(line):
+                    self._add_finding(
+                        severity="warning",
+                        category="safety_bypass",
+                        file=file,
+                        line=line_num,
+                        description="Potential safety bypass attempt detected",
+                        matched_text=line.strip()[:100],
+                        recommendation="Skill files should not attempt to bypass safety measures. This is a prompt injection indicator.",
+                    )
+                    break
 
     def _check_html_comments(self, lines, file):
         """Check for hidden instructions in HTML comments."""
-        pass
+        # Only check .md files
+        if not file.endswith(".md"):
+            return
+
+        in_comment = False
+        comment_start_line = 0
+        comment_content = ""
+
+        for line_num, line in enumerate(lines, start=1):
+            if not in_comment:
+                # Check for comment opening
+                start_idx = line.find("<!--")
+                if start_idx == -1:
+                    continue
+
+                # Check if comment closes on the same line
+                end_idx = line.find("-->", start_idx + 4)
+                if end_idx != -1:
+                    # Single-line comment
+                    content = line[start_idx + 4:end_idx].strip()
+                    display = content[:80] if len(content) > 80 else content
+                    self._add_finding(
+                        severity="warning",
+                        category="html_comment",
+                        file=file,
+                        line=line_num,
+                        description=f"HTML comment detected — may contain hidden instructions: {display}",
+                        matched_text=line.strip()[:100],
+                        recommendation="Review HTML comments carefully. They are invisible in rendered markdown and can hide malicious instructions.",
+                    )
+                else:
+                    # Multi-line comment starts
+                    in_comment = True
+                    comment_start_line = line_num
+                    comment_content = line[start_idx + 4:]
+            else:
+                # Inside a multi-line comment, look for closing
+                end_idx = line.find("-->")
+                if end_idx != -1:
+                    # Comment closes on this line
+                    comment_content += "\n" + line[:end_idx]
+                    content = comment_content.strip()
+                    display = content[:80] if len(content) > 80 else content
+                    self._add_finding(
+                        severity="warning",
+                        category="html_comment",
+                        file=file,
+                        line=comment_start_line,
+                        description=f"HTML comment detected — may contain hidden instructions: {display}",
+                        matched_text=comment_content.strip()[:100],
+                        recommendation="Review HTML comments carefully. They are invisible in rendered markdown and can hide malicious instructions.",
+                    )
+                    in_comment = False
+                    comment_content = ""
+                else:
+                    comment_content += "\n" + line
 
     def _check_encoded_content(self, lines, file):
         """Check for base64 or other encoded content that may hide payloads."""
