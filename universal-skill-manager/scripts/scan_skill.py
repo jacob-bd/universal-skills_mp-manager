@@ -140,15 +140,107 @@ class SkillScanner:
 
     def _check_invisible_unicode(self, lines, file):
         """Check for invisible or zero-width unicode characters."""
-        pass
+        # Define all invisible/zero-width Unicode codepoint ranges
+        invisible_ranges = [
+            (0x200B, 0x200F),  # zero-width space, ZWNJ, ZWJ, LRM, RLM
+            (0x2060, 0x2064),  # word joiner, invisible operators/separators
+            (0x2066, 0x2069),  # directional isolates
+            (0x202A, 0x202E),  # bidirectional overrides
+            (0x206A, 0x206F),  # deprecated formatting characters
+            (0xFEFF, 0xFEFF),  # byte order mark
+            (0x00AD, 0x00AD),  # soft hyphen
+            (0x034F, 0x034F),  # combining grapheme joiner
+            (0x061C, 0x061C),  # arabic letter mark
+            (0x115F, 0x1160),  # hangul filler
+            (0x17B4, 0x17B5),  # khmer vowel inherent
+            (0x180E, 0x180E),  # mongolian vowel separator
+            (0xE0000, 0xE007F),  # unicode tag characters
+        ]
+
+        def is_invisible(ch):
+            cp = ord(ch)
+            for start, end in invisible_ranges:
+                if start <= cp <= end:
+                    return True
+            return False
+
+        for line_num, line in enumerate(lines, start=1):
+            found_codepoints = set()
+            for ch in line:
+                if is_invisible(ch):
+                    found_codepoints.add(ch)
+
+            if found_codepoints:
+                # Deduplicate and show up to 5 unique codepoints
+                codepoint_strs = sorted(
+                    [f"U+{ord(c):04X}" for c in found_codepoints]
+                )
+                shown = codepoint_strs[:5]
+                suffix = f" (and {len(codepoint_strs) - 5} more)" if len(codepoint_strs) > 5 else ""
+                cp_display = ", ".join(shown) + suffix
+
+                self._add_finding(
+                    severity="critical",
+                    category="invisible_unicode",
+                    file=file,
+                    line=line_num,
+                    description=f"Invisible Unicode characters detected: {cp_display}",
+                    matched_text=line.strip()[:120],
+                    recommendation="Remove invisible characters. These can hide malicious instructions from human review.",
+                )
 
     def _check_exfiltration_urls(self, lines, file):
         """Check for URLs that may exfiltrate data to external servers."""
-        pass
+        patterns = [
+            (
+                r'!\[.*?\]\(https?://[^)]*[\$\{]',
+                "Markdown image with variable interpolation — may exfiltrate data via URL",
+            ),
+            (
+                r'<img\s[^>]*src\s*=\s*["\']https?://',
+                "HTML img tag with external URL — may load tracking pixel or exfiltrate data",
+            ),
+            (
+                r'!\[.*?\]\(https?://[^)]*\?[^)]*=',
+                "Markdown image with query parameters — may exfiltrate data via URL parameters",
+            ),
+        ]
+
+        compiled = [(re.compile(p, re.IGNORECASE), desc) for p, desc in patterns]
+
+        for line_num, line in enumerate(lines, start=1):
+            for regex, description in compiled:
+                if regex.search(line):
+                    self._add_finding(
+                        severity="critical",
+                        category="exfiltration_url",
+                        file=file,
+                        line=line_num,
+                        description=description,
+                        matched_text=line.strip()[:120],
+                        recommendation="Remove or replace with a local/trusted image. External images in skill files can leak sensitive data.",
+                    )
+                    break  # One finding per line
 
     def _check_shell_pipe_execution(self, lines, file):
         """Check for shell commands piped from remote sources."""
-        pass
+        pattern = re.compile(
+            r'(curl|wget)\s+[^|]*\|\s*(bash|sh|zsh|python[23]?|perl|ruby|node)',
+            re.IGNORECASE,
+        )
+
+        for line_num, line in enumerate(lines, start=1):
+            match = pattern.search(line)
+            if match:
+                self._add_finding(
+                    severity="critical",
+                    category="shell_pipe_execution",
+                    file=file,
+                    line=line_num,
+                    description="Remote content piped directly into shell interpreter — arbitrary code execution risk",
+                    matched_text=line.strip()[:120],
+                    recommendation="Download the script first, review it, then execute. Never pipe remote content directly into a shell.",
+                )
 
     def _check_credential_references(self, lines, file):
         """Check for references to credentials, tokens, or API keys."""
