@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-02-07
+
+### Added
+- Security scanning for skill files at install time (`scan_skill.py`).
+- 14 detection categories across 3 severity levels (Critical/Warning/Info).
+- Detects invisible Unicode, data exfiltration URLs, shell pipe execution, credential references, command execution patterns, prompt injection, role hijacking, safety bypass attempts, HTML comments, encoded content, delimiter injection, and cross-skill escalation.
+- `--skip-scan` flag for `install_skill.py` to bypass security scan.
+- `docs/SECURITY_SCANNING.md` reference documentation.
+
 ## [1.0.1] - 2026-02-03
 
 ### Added

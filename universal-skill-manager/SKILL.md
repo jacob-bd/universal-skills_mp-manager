@@ -87,6 +87,7 @@ This skill (Universal Skill Manager) requires network access to call the SkillsM
     *   The script handles: atomic install, validation, subdirectories, safety checks
     *   **Safety feature**: Script will abort (exit code 4) if destination is a root skills directory
     *   **Update detection**: If skill exists, shows diff and prompts for confirmation
+    *   **Security scan**: The install script automatically scans downloaded skills for security threats (invisible characters, data exfiltration, prompt injection). Review any findings before proceeding.
 4.  **Determine Primary Target:**
     *   Ask: "Should this be installed Globally (User) or Locally (Project)?"
     *   Determine the primary tool (e.g., if user is in Claude Code, Claude is primary)
